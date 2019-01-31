@@ -31,4 +31,8 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess("登录成功", user);
     }
+
+    public ServerResponse<String> register(User user){
+        // TODO: 2019-01-31 :register 
+    }
 }
