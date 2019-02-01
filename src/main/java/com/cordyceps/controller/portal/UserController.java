@@ -40,6 +40,6 @@ public class UserController {
     @RequestMapping(value = "register.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> register(User user){
-        return iUserService.
+        return iUserService.register(user);
     }
 }
