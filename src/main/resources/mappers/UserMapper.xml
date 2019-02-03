@@ -166,4 +166,10 @@
     select count(1) from cordyceps_user
     where email = #{email}
   </select>
+  <select id="selectQuestionByUsername" resultType="string" parameterType="string">
+    select
+    question
+    from cordyceps_user
+    where username = #{username}
+  </select>
 </mapper>
