@@ -6,9 +6,12 @@ import com.cordyceps.dao.UserMapper;
 import com.cordyceps.pojo.User;
 import com.cordyceps.service.IUserService;
 import com.cordyceps.util.MD5Util;
+import com.cordyceps.util.TokenCache;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service("iUserService")
 public class UserServiceImpl implements IUserService {
@@ -87,5 +90,16 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createBySuccess(question);
         }
         return ServerResponse.createByErrorMessage("找回密码的问题是空的");
+    }
+
+    public ServerResponse<String> checkAnswer(String username, String question, String answer){
+        int resultCount = userMapper.checkAnswer(username, question, answer);
+        if (resultCount > 0) {
+            //说明该用户回答问题正确，接下来要给该用户绑定token，保证只有该用户此时能密码，且是自己的密码
+            String forgetToken = UUID.randomUUID().toString();
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, forgetToken);
+            return ServerResponse.createBySuccess(forgetToken);
+        }
+        return ServerResponse.createByErrorMessage("问题的回答错误");
     }
 }
