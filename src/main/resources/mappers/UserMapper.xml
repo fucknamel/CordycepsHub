@@ -192,4 +192,11 @@
     where password = #{password}
     and id = #{userId}
   </select>
+  <select id="checkEmailByUserId" parameterType="map" resultType="int">
+    select
+    count(1)
+    from cordyceps_user
+    where email = #{email}
+    and id != #{userId}
+  </select>
 </mapper>
