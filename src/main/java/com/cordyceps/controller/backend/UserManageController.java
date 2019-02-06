@@ -25,7 +25,7 @@ public class UserManageController {
         ServerResponse<User> response = iUserService.login(username, password);
         if (response.isSuccess()) {
             User user = response.getData();
-            if (user.getRole() == Const.Role.ROLE_ADMIN) {
+            if (iUserService.checkAdminRole(user).isSuccess()) {
                 session.setAttribute(Const.CURRENT_USER, user);
                 return response;
             } else {
