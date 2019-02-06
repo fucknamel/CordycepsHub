@@ -1,6 +1,7 @@
 package com.cordyceps.controller.portal;
 
 import com.cordyceps.common.Const;
+import com.cordyceps.common.ResponseCode;
 import com.cordyceps.common.ServerResponse;
 import com.cordyceps.pojo.User;
 import com.cordyceps.service.IUserService;
@@ -101,5 +102,15 @@ public class UserController {
             session.setAttribute(Const.CURRENT_USER, response.getData());
         }
         return response;
+    }
+
+    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> getInformation(HttpSession session){
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登陆，需要强制登陆");
+        }
+        return iUserService.getInformation(currentUser.getId());
     }
 }
