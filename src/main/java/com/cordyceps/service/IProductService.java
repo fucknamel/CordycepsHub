@@ -6,4 +6,6 @@ import com.cordyceps.pojo.Product;
 public interface IProductService {
 
     ServerResponse saveOrUpdateProduct(Product product);
+
+    ServerResponse<String> setSaleStatus(Integer productId, Integer status);
 }

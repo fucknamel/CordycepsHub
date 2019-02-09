@@ -38,4 +38,19 @@ public class ProductManageController {
             return ServerResponse.createByErrorMessage("无操作权限");
         }
     }
+
+    @RequestMapping(value = "set_sale_status.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse setSaleStatus(HttpSession session, Integer productId, Integer status){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要登陆");
+        }
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            return iProductService.setSaleStatus(productId, status);
+        }
+        return ServerResponse.createByErrorMessage("无操作权限");
+    }
+
+
 }

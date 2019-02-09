@@ -1,5 +1,6 @@
 package com.cordyceps.service.impl;
 
+import com.cordyceps.common.ResponseCode;
 import com.cordyceps.common.ServerResponse;
 import com.cordyceps.dao.ProductMapper;
 import com.cordyceps.pojo.Product;
@@ -31,5 +32,19 @@ public class ProductServiceImpl implements IProductService {
             }
         }
         return ServerResponse.createByErrorMessage("新增或更新产品参数错误");
+    }
+
+    public ServerResponse<String> setSaleStatus(Integer productId, Integer status) {
+        if (productId == null || status == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Product product = new Product();
+        product.setId(productId);
+        product.setStatus(status);
+        int rowCount = productMapper.updateByPrimaryKeySelective(product);
+        if (rowCount > 0) {
+            return ServerResponse.createBySuccess("修改产品销售状态成功");
+        }
+        return ServerResponse.createByErrorMessage("修改产品销售状态失败");
     }
 }
