@@ -6,39 +6,25 @@
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="category_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="digger_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="subtitle" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="main_image" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sub_images" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="length" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
       <arg column="weight" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="detail" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
       <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-    </constructor>
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.cordyceps.pojo.Product" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="category_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="digger_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="length" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
-      <arg column="weight" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
-      <arg column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
-      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="detail" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, category_id, digger_id, length, weight, price, status, create_time, update_time
+    id, category_id, digger_id, subtitle, main_image, sub_images, length, weight, detail, 
+    price, status, create_time, update_time
   </sql>
-  <sql id="Blob_Column_List" >
-    detail
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from cordyceps_product
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -48,13 +34,15 @@
   </delete>
   <insert id="insert" parameterType="com.cordyceps.pojo.Product" >
     insert into cordyceps_product (id, category_id, digger_id, 
-      length, weight, price, 
-      status, create_time, update_time, 
-      detail)
+      subtitle, main_image, sub_images, 
+      length, weight, detail, 
+      price, status, create_time, 
+      update_time)
     values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{diggerId,jdbcType=INTEGER}, 
-      #{length,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, 
-      #{status,jdbcType=INTEGER}, now(), now(),
-      #{detail,jdbcType=LONGVARCHAR})
+      #{subtitle,jdbcType=VARCHAR}, #{mainImage,jdbcType=VARCHAR}, #{subImages,jdbcType=VARCHAR}, 
+      #{length,jdbcType=DECIMAL}, #{weight,jdbcType=DECIMAL}, #{detail,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, now(),
+      now())
   </insert>
   <insert id="insertSelective" parameterType="com.cordyceps.pojo.Product" >
     insert into cordyceps_product
@@ -68,11 +56,23 @@
       <if test="diggerId != null" >
         digger_id,
       </if>
+      <if test="subtitle != null" >
+        subtitle,
+      </if>
+      <if test="mainImage != null" >
+        main_image,
+      </if>
+      <if test="subImages != null" >
+        sub_images,
+      </if>
       <if test="length != null" >
         length,
       </if>
       <if test="weight != null" >
         weight,
+      </if>
+      <if test="detail != null" >
+        detail,
       </if>
       <if test="price != null" >
         price,
@@ -86,9 +86,6 @@
       <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="detail != null" >
-        detail,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -100,11 +97,23 @@
       <if test="diggerId != null" >
         #{diggerId,jdbcType=INTEGER},
       </if>
+      <if test="subtitle != null" >
+        #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mainImage != null" >
+        #{mainImage,jdbcType=VARCHAR},
+      </if>
+      <if test="subImages != null" >
+        #{subImages,jdbcType=VARCHAR},
+      </if>
       <if test="length != null" >
         #{length,jdbcType=DECIMAL},
       </if>
       <if test="weight != null" >
         #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="detail != null" >
+        #{detail,jdbcType=VARCHAR},
       </if>
       <if test="price != null" >
         #{price,jdbcType=DECIMAL},
@@ -118,9 +127,6 @@
       <if test="updateTime != null" >
         now(),
       </if>
-      <if test="detail != null" >
-        #{detail,jdbcType=LONGVARCHAR},
-      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.cordyceps.pojo.Product" >
@@ -132,11 +138,23 @@
       <if test="diggerId != null" >
         digger_id = #{diggerId,jdbcType=INTEGER},
       </if>
+      <if test="subtitle != null" >
+        subtitle = #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mainImage != null" >
+        main_image = #{mainImage,jdbcType=VARCHAR},
+      </if>
+      <if test="subImages != null" >
+        sub_images = #{subImages,jdbcType=VARCHAR},
+      </if>
       <if test="length != null" >
         length = #{length,jdbcType=DECIMAL},
       </if>
       <if test="weight != null" >
         weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="detail != null" >
+        detail = #{detail,jdbcType=VARCHAR},
       </if>
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
@@ -150,31 +168,19 @@
       <if test="updateTime != null" >
         update_time = now(),
       </if>
-      <if test="detail != null" >
-        detail = #{detail,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cordyceps.pojo.Product" >
-    update cordyceps_product
-    set category_id = #{categoryId,jdbcType=INTEGER},
-      digger_id = #{diggerId,jdbcType=INTEGER},
-      length = #{length,jdbcType=DECIMAL},
-      weight = #{weight,jdbcType=DECIMAL},
-      price = #{price,jdbcType=DECIMAL},
-      status = #{status,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = now(),
-      detail = #{detail,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cordyceps.pojo.Product" >
     update cordyceps_product
     set category_id = #{categoryId,jdbcType=INTEGER},
       digger_id = #{diggerId,jdbcType=INTEGER},
+      subtitle = #{subtitle,jdbcType=VARCHAR},
+      main_image = #{mainImage,jdbcType=VARCHAR},
+      sub_images = #{subImages,jdbcType=VARCHAR},
       length = #{length,jdbcType=DECIMAL},
       weight = #{weight,jdbcType=DECIMAL},
+      detail = #{detail,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
       status = #{status,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

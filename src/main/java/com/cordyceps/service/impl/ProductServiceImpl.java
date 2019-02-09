@@ -2,10 +2,14 @@ package com.cordyceps.service.impl;
 
 import com.cordyceps.common.ResponseCode;
 import com.cordyceps.common.ServerResponse;
+import com.cordyceps.dao.CategoryMapper;
 import com.cordyceps.dao.ProductMapper;
+import com.cordyceps.pojo.Category;
 import com.cordyceps.pojo.Product;
 import com.cordyceps.service.IProductService;
-import org.apache.commons.lang3.StringUtils;
+import com.cordyceps.util.DateTimeUtil;
+import com.cordyceps.util.PropertiesUtil;
+import com.cordyceps.vo.ProductDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +19,10 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    public ServerResponse saveOrUpdateProduct(Product product){
+    @Autowired
+    private CategoryMapper categoryMapper;
+
+    public ServerResponse saveOrUpdateProduct(Product product) {
         if (product != null) {
             if (product.getId() != null) {
                 int rowCount = productMapper.updateByPrimaryKey(product);
@@ -46,5 +53,46 @@ public class ProductServiceImpl implements IProductService {
             return ServerResponse.createBySuccess("修改产品销售状态成功");
         }
         return ServerResponse.createByErrorMessage("修改产品销售状态失败");
+    }
+
+    public ServerResponse<ProductDetailVo> manageProductDetail(Integer productId) {
+        if (productId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if (product == null) {
+            return ServerResponse.createByErrorMessage("产品已下架或删除");
+        }
+        ProductDetailVo productDetailVo = assembleProductDetailVo(product);
+        return ServerResponse.createBySuccess(productDetailVo);
+    }
+
+    private ProductDetailVo assembleProductDetailVo(Product product) {
+        ProductDetailVo productDetailVo = new ProductDetailVo();
+        productDetailVo.setId(product.getId());
+        productDetailVo.setCategoryId(product.getCategoryId());
+        productDetailVo.setDiggerId(product.getDiggerId());
+        productDetailVo.setSubtitle(product.getSubtitle());
+        productDetailVo.setMainImage(product.getMainImage());
+        productDetailVo.setSubImages(product.getSubImages());
+        productDetailVo.setLength(product.getLength());
+        productDetailVo.setWeight(product.getWeight());
+        productDetailVo.setDetail(product.getDetail());
+        productDetailVo.setPrice(product.getPrice());
+        productDetailVo.setStatus(product.getStatus());
+
+        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+
+        Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
+        if (category == null) {
+            productDetailVo.setParentCategoryId(0);//默认根结点
+        } else {
+            productDetailVo.setParentCategoryId(category.getParentId());
+        }
+
+        productDetailVo.setCreateTime(DateTimeUtil.dateToStr(product.getCreateTime()));
+        productDetailVo.setUpdateTime(DateTimeUtil.dateToStr(product.getUpdateTime()));
+
+        return productDetailVo;
     }
 }
