@@ -10,9 +10,11 @@ import com.cordyceps.service.IProductService;
 import com.cordyceps.util.DateTimeUtil;
 import com.cordyceps.util.PropertiesUtil;
 import com.cordyceps.vo.ProductDetailVo;
+import com.cordyceps.vo.ProductListVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -105,13 +107,44 @@ public class ProductServiceImpl implements IProductService {
         PageHelper.startPage(pageNum, pageSize);
         List<Product> productList = productMapper.selectList();
 
-        List<ProductDetailVo> productDetailVoList = Lists.newArrayList();
+        List<ProductListVo> productListVoList = Lists.newArrayList();
         for (Product productItem : productList){
-            ProductDetailVo productDetailVo = assembleProductDetailVo(productItem);
-            productDetailVoList.add(productDetailVo);
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
         }
         PageInfo pageResult = new PageInfo(productList);
-        pageResult.setList(productDetailVoList);
+        pageResult.setList(productListVoList);
+
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    private ProductListVo assembleProductListVo(Product product){
+        ProductListVo productListVo = new ProductListVo();
+        productListVo.setId(product.getId());
+        productListVo.setCategoryId(product.getCategoryId());
+        productListVo.setSubtitle(product.getSubtitle());
+        productListVo.setMainImage(product.getMainImage());
+        productListVo.setPrice(product.getPrice());
+        productListVo.setStatus(product.getStatus());
+        productListVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
+
+        return productListVo;
+    }
+
+    public ServerResponse<PageInfo> searchProduct(String productTitle, Integer productId, int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        if (StringUtils.isNoneBlank(productTitle)){
+            productTitle = new StringBuilder().append("%").append(productTitle).append("%").toString();
+        }
+        List<Product> productList = productMapper.selectListByTitleAndId(productTitle, productId);
+
+        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for (Product productItem : productList){
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVoList);
 
         return ServerResponse.createBySuccess(pageResult);
     }

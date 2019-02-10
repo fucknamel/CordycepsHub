@@ -3,6 +3,7 @@ package com.cordyceps.service;
 import com.cordyceps.common.ServerResponse;
 import com.cordyceps.pojo.Product;
 import com.cordyceps.vo.ProductDetailVo;
+import com.github.pagehelper.PageInfo;
 
 public interface IProductService {
 
@@ -13,4 +14,6 @@ public interface IProductService {
     ServerResponse<ProductDetailVo> manageProductDetail(Integer productId);
 
     ServerResponse getProductList(int pageNum, int pageSize);
+
+    ServerResponse<PageInfo> searchProduct(String productTitle, Integer productId, int pageNum, int pageSize);
 }

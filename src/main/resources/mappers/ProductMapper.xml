@@ -193,4 +193,17 @@
     from cordyceps_product
     order by id asc
   </select>
+  <select id="selectListByTitleAndId" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List"/>
+    from cordyceps_product
+    <where>
+      <if test="productTitle != null">
+        and subtitle like #{productTitle}
+      </if>
+      <if test="productId != null">
+        and id = #{productId}
+      </if>
+    </where>
+  </select>
 </mapper>
