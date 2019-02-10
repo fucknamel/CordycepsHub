@@ -10,8 +10,13 @@ import com.cordyceps.service.IProductService;
 import com.cordyceps.util.DateTimeUtil;
 import com.cordyceps.util.PropertiesUtil;
 import com.cordyceps.vo.ProductDetailVo;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService {
@@ -94,5 +99,20 @@ public class ProductServiceImpl implements IProductService {
         productDetailVo.setUpdateTime(DateTimeUtil.dateToStr(product.getUpdateTime()));
 
         return productDetailVo;
+    }
+
+    public ServerResponse getProductList(int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<Product> productList = productMapper.selectList();
+
+        List<ProductDetailVo> productDetailVoList = Lists.newArrayList();
+        for (Product productItem : productList){
+            ProductDetailVo productDetailVo = assembleProductDetailVo(productItem);
+            productDetailVoList.add(productDetailVo);
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productDetailVoList);
+
+        return ServerResponse.createBySuccess(pageResult);
     }
 }
