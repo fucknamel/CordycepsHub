@@ -1,11 +1,13 @@
 package com.cordyceps.service.impl;
 
+import com.cordyceps.common.Const;
 import com.cordyceps.common.ResponseCode;
 import com.cordyceps.common.ServerResponse;
 import com.cordyceps.dao.CategoryMapper;
 import com.cordyceps.dao.ProductMapper;
 import com.cordyceps.pojo.Category;
 import com.cordyceps.pojo.Product;
+import com.cordyceps.service.ICategoryService;
 import com.cordyceps.service.IProductService;
 import com.cordyceps.util.DateTimeUtil;
 import com.cordyceps.util.PropertiesUtil;
@@ -28,6 +30,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private ICategoryService iCategoryService;
 
     public ServerResponse saveOrUpdateProduct(Product product) {
         if (product != null) {
@@ -131,16 +136,58 @@ public class ProductServiceImpl implements IProductService {
         return productListVo;
     }
 
-    public ServerResponse<PageInfo> searchProduct(String productTitle, Integer productId, int pageNum, int pageSize){
+    public ServerResponse<PageInfo> getProductByTitleAndProductId(String productTitle, Integer productId, int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
         if (StringUtils.isNoneBlank(productTitle)){
             productTitle = new StringBuilder().append("%").append(productTitle).append("%").toString();
         }
-        List<Product> productList = productMapper.selectListByTitleAndId(productTitle, productId);
+        List<Product> productList = productMapper.selectListByTitleAndProductId(productTitle, productId);
 
         List<ProductListVo> productListVoList = Lists.newArrayList();
         for (Product productItem : productList){
             ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }
+        PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productListVoList);
+
+        return ServerResponse.createBySuccess(pageResult);
+    }
+
+    public ServerResponse getProductByKeywordAndCategory(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy){
+        if (StringUtils.isBlank(keyword) && categoryId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        List<Integer> categoryIdList = Lists.newArrayList();
+
+        if (categoryId != null) {
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            if (category == null && StringUtils.isBlank(keyword)){
+                //没有该分类，并且没有关键字，此时返回一个空的结果集，不报错
+                PageHelper.startPage(pageNum, pageSize);
+                List<ProductListVo> productListVoList = Lists.newArrayList();
+                PageInfo pageInfo = new PageInfo(productListVoList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
+            categoryIdList = iCategoryService.selectCategoryAndChildrenById(category.getId()).getData();
+        }
+        if (StringUtils.isNotBlank(keyword)){
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+
+        PageHelper.startPage(pageNum, pageSize);
+        //排序处理
+        if (StringUtils.isNotBlank(orderBy)){
+            if (Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)){
+                String[] orderByArray = orderBy.split("_");
+                PageHelper.orderBy(orderByArray[0] + " " + orderByArray[1]);
+            }
+        }
+        List<Product> productList = productMapper.selectListByTitleAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword, categoryIdList.size()==0?null:categoryIdList);
+
+        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for (Product product : productList){
+            ProductListVo productListVo = assembleProductListVo(product);
             productListVoList.add(productListVo);
         }
         PageInfo pageResult = new PageInfo(productList);
