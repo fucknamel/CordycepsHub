@@ -2,6 +2,8 @@ package com.cordyceps.dao;
 
 import com.cordyceps.pojo.Category;
 
+import java.util.List;
+
 public interface CategoryMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -15,5 +17,5 @@ public interface CategoryMapper {
 
     int updateByPrimaryKey(Category record);
 
-
+    List<Category> selectCategoryChildrenByParentId(Integer parentId);
 }

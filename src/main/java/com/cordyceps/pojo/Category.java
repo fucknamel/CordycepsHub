@@ -9,7 +9,7 @@ public class Category {
 
     private String name;
 
-    private Byte status;
+    private Boolean status;
 
     private Integer sortOrder;
 
@@ -17,7 +17,7 @@ public class Category {
 
     private Date updateTime;
 
-    public Category(Integer id, Integer parentId, String name, Byte status, Integer sortOrder, Date createTime, Date updateTime) {
+    public Category(Integer id, Integer parentId, String name, Boolean status, Integer sortOrder, Date createTime, Date updateTime) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
@@ -55,11 +55,11 @@ public class Category {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
