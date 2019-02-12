@@ -193,7 +193,7 @@
     from cordyceps_product
     order by id asc
   </select>
-  <select id="selectListByTitleAndId" resultMap="BaseResultMap" parameterType="map">
+  <select id="selectListByTitleAndProductId" resultMap="BaseResultMap" parameterType="map">
     select
     <include refid="Base_Column_List"/>
     from cordyceps_product
@@ -205,5 +205,20 @@
         and id = #{productId}
       </if>
     </where>
+  </select>
+  <select id="selectListByTitleAndCategoryIds" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from cordyceps_product
+    where status = 1
+    <if test="productTitle != null">
+      and sub_images like #{productTitle}
+    </if>
+    <if test="categoryIdList != null">
+      and category_id in
+      <foreach item="item" index="index" open="(" separator="," close=")" collection="category_id">
+        #{item}
+      </foreach>
+    </if>
   </select>
 </mapper>
