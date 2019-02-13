@@ -43,6 +43,21 @@ public class CategoryManageController {
         }
     }
 
+    @RequestMapping("set_category_name.do")
+    @ResponseBody
+    public ServerResponse setCategoryName(HttpSession session, Integer categoryId, String categoryName){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            //更新categoryName
+            return iCategoryService.updateCategory(categoryId, categoryName);
+        }else {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+    }
+
     @RequestMapping(value = "get_category.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse getChildrenCategory(HttpSession session,@RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId){
