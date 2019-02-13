@@ -212,7 +212,7 @@
     from cordyceps_product
     where status = 1
     <if test="productTitle != null">
-      and sub_images like #{productTitle}
+      and subtitle like #{productTitle}
     </if>
     <if test="categoryIdList != null">
       and category_id in
