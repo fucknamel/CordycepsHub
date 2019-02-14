@@ -1,5 +1,6 @@
 package com.cordyceps.pojo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Transport {
@@ -9,9 +10,9 @@ public class Transport {
 
     private String location;
 
-    private String longitude;
+    private BigDecimal longitude;
 
-    private String latitude;
+    private BigDecimal latitude;
 
     private Integer status;
 
@@ -19,7 +20,7 @@ public class Transport {
 
     private Date updateTime;
 
-    public Transport(Integer id, Integer productId, String location, String longitude, String latitude, Integer status, Date createTime, Date updateTime) {
+    public Transport(Integer id, Integer productId, String location, BigDecimal longitude, BigDecimal latitude, Integer status, Date createTime, Date updateTime) {
         this.id = id;
         this.productId = productId;
         this.location = location;
@@ -58,20 +59,20 @@ public class Transport {
         this.location = location == null ? null : location.trim();
     }
 
-    public String getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude == null ? null : longitude.trim();
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 
-    public String getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude == null ? null : latitude.trim();
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
     }
 
     public Integer getStatus() {

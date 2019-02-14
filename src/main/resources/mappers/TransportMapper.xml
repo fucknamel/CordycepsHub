@@ -6,8 +6,8 @@
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="product_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="location" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="longitude" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="latitude" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="longitude" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="latitude" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
       <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
@@ -31,7 +31,7 @@
       longitude, latitude, status, 
       create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{location,jdbcType=VARCHAR}, 
-      #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, 
       now(), now())
   </insert>
   <insert id="insertSelective" parameterType="com.cordyceps.pojo.Transport" >
@@ -73,10 +73,10 @@
         #{location,jdbcType=VARCHAR},
       </if>
       <if test="longitude != null" >
-        #{longitude,jdbcType=VARCHAR},
+        #{longitude,jdbcType=DECIMAL},
       </if>
       <if test="latitude != null" >
-        #{latitude,jdbcType=VARCHAR},
+        #{latitude,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
@@ -99,10 +99,10 @@
         location = #{location,jdbcType=VARCHAR},
       </if>
       <if test="longitude != null" >
-        longitude = #{longitude,jdbcType=VARCHAR},
+        longitude = #{longitude,jdbcType=DECIMAL},
       </if>
       <if test="latitude != null" >
-        latitude = #{latitude,jdbcType=VARCHAR},
+        latitude = #{latitude,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
@@ -120,8 +120,8 @@
     update cordyceps_transport
     set product_id = #{productId,jdbcType=INTEGER},
       location = #{location,jdbcType=VARCHAR},
-      longitude = #{longitude,jdbcType=VARCHAR},
-      latitude = #{latitude,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DECIMAL},
+      latitude = #{latitude,jdbcType=DECIMAL},
       status = #{status,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
