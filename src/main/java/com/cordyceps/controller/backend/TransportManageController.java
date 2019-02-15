@@ -42,4 +42,21 @@ public class TransportManageController {
         }
         return ServerResponse.createByErrorMessage("用户无操作权限");
     }
+
+    @RequestMapping(value = "set_transport_location.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse setTransportLocation(HttpSession session,
+                                          @RequestParam("transportId") Integer transportId,
+                                          @RequestParam("location") String location,
+                                          @RequestParam("longitude") String longitude,
+                                          @RequestParam("latitude") String latitude){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登陆");
+        }
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            return iTransportService.updateTransport(transportId, location, longitude, latitude);
+        }
+        return ServerResponse.createByErrorMessage("用户无操作权限");
+    }
 }

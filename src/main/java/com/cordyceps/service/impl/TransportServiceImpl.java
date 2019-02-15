@@ -45,4 +45,27 @@ public class TransportServiceImpl implements ITransportService {
         }
         return ServerResponse.createByErrorMessage("新增运输信息失败");
     }
+
+    public ServerResponse updateTransport(Integer transportId, String location, String longitude, String latitude){
+        if (transportId == null || location == null || longitude == null || latitude == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Transport transport = new Transport();
+        transport.setId(transportId);
+        transport.setLocation(location);
+        try{
+            BigDecimal longi = new BigDecimal(longitude);
+            BigDecimal lati = new BigDecimal(latitude);
+            transport.setLongitude(longi);
+            transport.setLatitude(lati);
+
+            int rowResult = transportMapper.updateByPrimaryKeySelective(transport);
+            if (rowResult > 0) {
+                return ServerResponse.createBySuccessMessage("更新地点成功");
+            }
+        }catch (NumberFormatException e){
+            logger.error("经纬度格式错误", e);
+        }
+        return ServerResponse.createByErrorMessage("更新地点失败");
+    }
 }
