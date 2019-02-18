@@ -103,14 +103,4 @@ public class UserController {
         }
         return response;
     }
-
-    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
-    @ResponseBody
-    public ServerResponse<User> getInformation(HttpSession session){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登陆，需要强制登陆");
-        }
-        return iUserService.getInformation(currentUser.getId());
-    }
 }

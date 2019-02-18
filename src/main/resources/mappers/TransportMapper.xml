@@ -127,4 +127,11 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectListByProductId" resultMap="BaseResultMap" parameterType="int">
+    select
+    <include refid="Base_Column_List"/>
+    from cordyceps_transport
+    where product_id = #{productId}
+    order by status asc
+  </select>
 </mapper>

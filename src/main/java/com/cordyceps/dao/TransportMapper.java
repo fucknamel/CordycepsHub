@@ -2,6 +2,8 @@ package com.cordyceps.dao;
 
 import com.cordyceps.pojo.Transport;
 
+import java.util.List;
+
 public interface TransportMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface TransportMapper {
     int updateByPrimaryKeySelective(Transport record);
 
     int updateByPrimaryKey(Transport record);
+
+    List<Transport> selectListByProductId(Integer productId);
 }
