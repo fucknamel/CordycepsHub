@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 public class TransportListVo {
 
+    private Integer transportId;
+
     private Integer productId;
 
     private String location;
@@ -13,6 +15,14 @@ public class TransportListVo {
     private BigDecimal latitude;
 
     private Integer status;
+
+    public Integer getTransportId() {
+        return transportId;
+    }
+
+    public void setTransportId(Integer transportId) {
+        this.transportId = transportId;
+    }
 
     public Integer getProductId() {
         return productId;

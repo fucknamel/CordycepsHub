@@ -94,6 +94,7 @@ public class TransportServiceImpl implements ITransportService {
 
     private TransportListVo assembleTransportListVo(Transport transport){
         TransportListVo transportListVo = new TransportListVo();
+        transportListVo.setTransportId(transport.getId());
         transportListVo.setProductId(transport.getProductId());
         transportListVo.setLocation(transport.getLocation());
         transportListVo.setLongitude(transport.getLongitude());
