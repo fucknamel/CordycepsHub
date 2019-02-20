@@ -3,6 +3,7 @@ package com.cordyceps.controller.backend;
 import com.cordyceps.common.Const;
 import com.cordyceps.common.ResponseCode;
 import com.cordyceps.common.ServerResponse;
+import com.cordyceps.dao.TransportMapper;
 import com.cordyceps.pojo.User;
 import com.cordyceps.service.ITransportService;
 import com.cordyceps.service.IUserService;
@@ -24,6 +25,9 @@ public class TransportManageController {
 
     @Autowired
     private ITransportService iTransportService;
+
+    @Autowired
+    private TransportMapper transportMapper;
 
     @RequestMapping(value = "add_transport.do", method = RequestMethod.POST)
     @ResponseBody
@@ -84,5 +88,21 @@ public class TransportManageController {
             return iTransportService.getList(pageNum, pageSize);
         }
         return ServerResponse.createByErrorMessage("无操作权限");
+    }
+
+    @RequestMapping(value = "delete_transport.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse deleteTransport(HttpSession session, Integer transportId){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
+        }
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            int rowCount = transportMapper.deleteByPrimaryKey(transportId);
+            if (rowCount > 0) {
+                return ServerResponse.createBySuccessMessage("删除运输信息成功");
+            }
+        }
+        return ServerResponse.createByErrorMessage("删除运输信息失败");
     }
 }
