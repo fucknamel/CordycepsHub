@@ -18,4 +18,6 @@ public interface TransportMapper {
     int updateByPrimaryKey(Transport record);
 
     List<Transport> selectListByProductId(Integer productId);
+
+    List<Transport> selectList();
 }

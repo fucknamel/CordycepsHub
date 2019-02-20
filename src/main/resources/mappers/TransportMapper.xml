@@ -134,4 +134,10 @@
     where product_id = #{productId}
     order by status asc
   </select>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from cordyceps_transport
+    order by status asc
+  </select>
 </mapper>

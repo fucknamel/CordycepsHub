@@ -9,4 +9,6 @@ public interface ITransportService {
     ServerResponse updateTransport(Integer transportId, String location, String longitude, String latitude);
 
     ServerResponse getTransportListByProductId(Integer productId, int pageNum, int pageSize);
+
+    ServerResponse getList(int pageNum, int pageSize);
 }

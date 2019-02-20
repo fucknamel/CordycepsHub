@@ -72,4 +72,17 @@ public class TransportManageController {
         }
         return ServerResponse.createByErrorMessage("无操作权限");
     }
+
+    @RequestMapping(value = "get_list.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse getList(HttpSession session,@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,@RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
+        }
+        if (iUserService.checkAdminRole(user).isSuccess()) {
+            return iTransportService.getList(pageNum, pageSize);
+        }
+        return ServerResponse.createByErrorMessage("无操作权限");
+    }
 }

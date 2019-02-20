@@ -102,4 +102,14 @@ public class TransportServiceImpl implements ITransportService {
 
         return transportListVo;
     }
+
+    public ServerResponse getList(int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<Transport> list = transportMapper.selectList();
+        if (list != null) {
+            PageInfo pageInfo = new PageInfo(list);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        return ServerResponse.createByErrorMessage("没有记录");
+    }
 }
