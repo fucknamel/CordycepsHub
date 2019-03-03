@@ -29,7 +29,12 @@ public class QRCodeUtil {
 
         try {
             BufferedImage image = new BufferedImage(Const.QRcode.WEIGHT, Const.QRcode.HEIGHT, BufferedImage.TYPE_INT_RGB);
-            File qrFile = new File("temp" + "." + Const.QRcode.FORMAT);
+            File fileDir = new File("temp");
+            if (!fileDir.exists()) {
+                fileDir.setWritable(true);
+                fileDir.mkdirs();
+            }
+            File qrFile = new File("temp", "temp" + "." + Const.QRcode.FORMAT);
             ImageIO.write(image, Const.QRcode.FORMAT, qrFile);
             MatrixToImageWriter.writeToPath(bitMatrix, Const.QRcode.FORMAT, qrFile.toPath());
 
