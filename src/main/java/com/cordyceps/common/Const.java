@@ -23,6 +23,13 @@ public class Const {
         int ROLE_SELLER = 3;//商家
     }
 
+    //二维码
+    public interface QRcode{
+        int HEIGHT = 320;
+        int WEIGHT = 320;
+        String FORMAT = "png";
+    }
+
     public enum ProductStatusEnum{
         ON_SALE(1, "在线");
 
