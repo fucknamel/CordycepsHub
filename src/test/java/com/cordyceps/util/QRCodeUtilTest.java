@@ -11,4 +11,11 @@ public class QRCodeUtilTest {
         String path = QRCodeUtil.getQRcodePath("nmsl");
         System.out.println(path);
     }
+
+    @Test
+    public void qrDecode(){
+        String path = QRCodeUtil.getQRcodePath("nmsl");
+        String result = QRCodeUtil.qrDecode(path);
+        System.out.println(result);
+    }
 }
