@@ -11,4 +11,6 @@ public interface ITransportService {
     ServerResponse getTransportListByProductId(Integer productId, int pageNum, int pageSize);
 
     ServerResponse getList(int pageNum, int pageSize);
+
+    ServerResponse getQRcodeById(Integer productId);
 }

@@ -5,6 +5,8 @@ import com.cordyceps.common.ServerResponse;
 import com.cordyceps.dao.TransportMapper;
 import com.cordyceps.pojo.Transport;
 import com.cordyceps.service.ITransportService;
+import com.cordyceps.util.PropertiesUtil;
+import com.cordyceps.util.QRCodeUtil;
 import com.cordyceps.vo.TransportListVo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -112,5 +114,15 @@ public class TransportServiceImpl implements ITransportService {
             return ServerResponse.createBySuccess(pageInfo);
         }
         return ServerResponse.createByErrorMessage("没有记录");
+    }
+
+    public ServerResponse getQRcodeById(Integer productId){
+        if (productId != null) {
+            String ans = PropertiesUtil.getProperty("http.prefix") + "transport/get_transport_list.do?productId=" + productId;
+            String path = QRCodeUtil.getQRcodePath(ans);
+
+            return ServerResponse.createBySuccess(path);
+        }
+        return ServerResponse.createByErrorMessage("参数错误或获取二维码失败");
     }
 }

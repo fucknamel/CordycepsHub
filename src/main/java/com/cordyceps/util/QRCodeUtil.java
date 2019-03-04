@@ -38,7 +38,7 @@ public class QRCodeUtil {
             ImageIO.write(image, Const.QRcode.FORMAT, qrFile);
             MatrixToImageWriter.writeToPath(bitMatrix, Const.QRcode.FORMAT, qrFile.toPath());
 
-            return qrFile.toPath().toString();
+            return qrFile.getAbsolutePath();
         }catch (Exception e){
             logger.error("生成暂存png文件失败", e);
         }

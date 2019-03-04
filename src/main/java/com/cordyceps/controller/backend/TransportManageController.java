@@ -36,7 +36,7 @@ public class TransportManageController {
                                        @RequestParam("location") String location,
                                        @RequestParam("longitude") String longitude,
                                        @RequestParam("latitude") String latitude,
-                                       @RequestParam(value = "status", defaultValue = "2") Integer status){
+                                       @RequestParam(value = "status", defaultValue = "2") Integer status) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
@@ -50,10 +50,10 @@ public class TransportManageController {
     @RequestMapping(value = "set_transport_location.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse setTransportLocation(HttpSession session,
-                                          @RequestParam("transportId") Integer transportId,
-                                          @RequestParam("location") String location,
-                                          @RequestParam("longitude") String longitude,
-                                          @RequestParam("latitude") String latitude){
+                                               @RequestParam("transportId") Integer transportId,
+                                               @RequestParam("location") String location,
+                                               @RequestParam("longitude") String longitude,
+                                               @RequestParam("latitude") String latitude) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登陆");
@@ -66,7 +66,7 @@ public class TransportManageController {
 
     @RequestMapping(value = "get_transport_list.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse getTransportList(HttpSession session,@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,@RequestParam(value = "pageSize", defaultValue = "10") int pageSize,@RequestParam("productId") Integer productId){
+    public ServerResponse getTransportList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @RequestParam("productId") Integer productId) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
@@ -79,7 +79,7 @@ public class TransportManageController {
 
     @RequestMapping(value = "get_list.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse getList(HttpSession session,@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,@RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+    public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
@@ -92,7 +92,7 @@ public class TransportManageController {
 
     @RequestMapping(value = "delete_transport.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse deleteTransport(HttpSession session, Integer transportId){
+    public ServerResponse deleteTransport(HttpSession session, Integer transportId) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录");
@@ -102,7 +102,8 @@ public class TransportManageController {
             if (rowCount > 0) {
                 return ServerResponse.createBySuccessMessage("删除运输信息成功");
             }
+            return ServerResponse.createByErrorMessage("删除运输信息失败");
         }
-        return ServerResponse.createByErrorMessage("删除运输信息失败");
+        return ServerResponse.createByErrorMessage("用户无操作权限");
     }
 }
