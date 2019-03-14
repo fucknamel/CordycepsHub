@@ -21,7 +21,6 @@ target/
 *.ipr
 *.iml
 *.iws
-*.properties
 
 #temp file
 *.log
