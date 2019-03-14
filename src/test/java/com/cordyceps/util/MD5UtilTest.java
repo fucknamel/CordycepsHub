@@ -2,8 +2,6 @@ package com.cordyceps.util;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class MD5UtilTest {
 
     @Test
