@@ -32,7 +32,7 @@ public class ProductController {
         return iProductService.getProductDetail(productId);
     }
 
-    @RequestMapping(value = "get_list.do", method = RequestMethod.POST)
+    @RequestMapping(value = "get_list.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse getList(@RequestParam(value = "keyword", required = false) String keyword,
                                   @RequestParam(value = "categoryId", required = false) Integer categoryId,
