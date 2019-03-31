@@ -26,7 +26,7 @@ public class ProductController {
     @Autowired
     private IFileService iFileService;
 
-    @RequestMapping(value = "get_detail.do", method = RequestMethod.POST)
+    @RequestMapping(value = "get_detail.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse getDetail(Integer productId) {
         return iProductService.getProductDetail(productId);
