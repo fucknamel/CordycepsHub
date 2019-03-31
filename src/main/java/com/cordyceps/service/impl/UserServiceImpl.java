@@ -165,12 +165,16 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
 
-    public ServerResponse<User> getInformation(Integer userId){
+    public ServerResponse<User> getDiggerInformation(Integer userId){
         User user = userMapper.selectByPrimaryKey(userId);
         if (user == null) {
             return ServerResponse.createByErrorMessage("找不到当前用户");
+        }else if(user.getRole() != Const.Role.ROLE_DIGGER){
+            return ServerResponse.createByErrorMessage("请求参数错误，非挖掘者");
         }
         user.setPassword(StringUtils.EMPTY);
+        user.setQuestion(StringUtils.EMPTY);
+        user.setAnswer(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
     }
 
