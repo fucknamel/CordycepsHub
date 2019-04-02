@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service("iTransportService")
@@ -88,6 +90,10 @@ public class TransportServiceImpl implements ITransportService {
             TransportListVo transportListVo = assembleTransportListVo(transportItem);
             transportListVoList.add(transportListVo);
         }
+
+        // 按照更新时间从大到小排序
+        transportListVoList.sort((TransportListVo o1, TransportListVo o2)->o2.getUpdateTime().compareTo(o1.getUpdateTime()));
+
         PageInfo pageInfo = new PageInfo(transportList);
         pageInfo.setList(transportListVoList);
 
@@ -102,6 +108,7 @@ public class TransportServiceImpl implements ITransportService {
         transportListVo.setLongitude(transport.getLongitude());
         transportListVo.setLatitude(transport.getLatitude());
         transportListVo.setStatus(transport.getStatus());
+        transportListVo.setUpdateTime(transport.getUpdateTime());
 
         return transportListVo;
     }

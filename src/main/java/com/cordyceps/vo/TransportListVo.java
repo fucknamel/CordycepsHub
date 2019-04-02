@@ -1,6 +1,7 @@
 package com.cordyceps.vo;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class TransportListVo {
 
@@ -13,6 +14,8 @@ public class TransportListVo {
     private BigDecimal longitude;
 
     private BigDecimal latitude;
+
+    private Date updateTime;
 
     private Integer status;
 
@@ -62,5 +65,13 @@ public class TransportListVo {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
