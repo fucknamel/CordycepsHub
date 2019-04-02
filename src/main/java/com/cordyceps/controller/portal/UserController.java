@@ -59,10 +59,14 @@ public class UserController {
         return ServerResponse.createByErrorMessage("用户未登录，无法获取当前用户信息");
     }
 
-    @RequestMapping(value = "get_digger_info.do", method = RequestMethod.GET)
+    @RequestMapping(value = "get_digger_info.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> getDiggerInfo(Integer diggerId){
-        return iUserService.getDiggerInformation(diggerId);
+    public ServerResponse<User> getDiggerInfo(HttpSession session, Integer diggerId){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user != null) {
+            return iUserService.getDiggerInformation(diggerId);
+        }
+        return ServerResponse.createByErrorMessage("用户未登陆，请登录");
     }
 
     @RequestMapping(value = "forget_get_question.do", method = RequestMethod.POST)

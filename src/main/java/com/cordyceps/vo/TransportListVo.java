@@ -15,7 +15,7 @@ public class TransportListVo {
 
     private BigDecimal latitude;
 
-    private Date updateTime;
+    private String updateTime;
 
     private Integer status;
 
@@ -67,11 +67,11 @@ public class TransportListVo {
         this.status = status;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

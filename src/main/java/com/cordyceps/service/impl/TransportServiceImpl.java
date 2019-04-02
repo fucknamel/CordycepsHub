@@ -5,6 +5,7 @@ import com.cordyceps.common.ServerResponse;
 import com.cordyceps.dao.TransportMapper;
 import com.cordyceps.pojo.Transport;
 import com.cordyceps.service.ITransportService;
+import com.cordyceps.util.DateTimeUtil;
 import com.cordyceps.util.PropertiesUtil;
 import com.cordyceps.util.QRCodeUtil;
 import com.cordyceps.vo.TransportListVo;
@@ -108,7 +109,7 @@ public class TransportServiceImpl implements ITransportService {
         transportListVo.setLongitude(transport.getLongitude());
         transportListVo.setLatitude(transport.getLatitude());
         transportListVo.setStatus(transport.getStatus());
-        transportListVo.setUpdateTime(transport.getUpdateTime());
+        transportListVo.setUpdateTime(DateTimeUtil.dateToStr(transport.getUpdateTime()));
 
         return transportListVo;
     }
