@@ -92,9 +92,6 @@ public class TransportServiceImpl implements ITransportService {
             transportListVoList.add(transportListVo);
         }
 
-        // 按照更新时间从大到小排序
-        transportListVoList.sort((TransportListVo o1, TransportListVo o2)->o2.getUpdateTime().compareTo(o1.getUpdateTime()));
-
         PageInfo pageInfo = new PageInfo(transportList);
         pageInfo.setList(transportListVoList);
 

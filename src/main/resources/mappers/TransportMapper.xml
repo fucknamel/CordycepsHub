@@ -132,7 +132,7 @@
     <include refid="Base_Column_List"/>
     from cordyceps_transport
     where product_id = #{productId}
-    order by status asc
+    order by update_time desc
   </select>
   <select id="selectList" resultMap="BaseResultMap">
     select

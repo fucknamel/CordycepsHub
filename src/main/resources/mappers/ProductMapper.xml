@@ -221,4 +221,11 @@
       </foreach>
     </if>
   </select>
+  <select id="selectListByDiggerId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from cordyceps_product
+    where digger_id = #{diggerId}
+    order by id asc
+  </select>
 </mapper>

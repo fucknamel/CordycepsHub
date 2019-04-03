@@ -195,4 +195,16 @@ public class ProductServiceImpl implements IProductService {
 
         return ServerResponse.createBySuccess(pageResult);
     }
+
+    public ServerResponse getProductListByDiggerId(Integer diggerId, int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        if (diggerId == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        List<Product> productList = productMapper.selectListByDiggerId(diggerId);
+
+        PageInfo pageResult = new PageInfo(productList);
+
+        return ServerResponse.createBySuccess(pageResult);
+    }
 }
