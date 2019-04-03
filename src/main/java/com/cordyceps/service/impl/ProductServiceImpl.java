@@ -203,7 +203,13 @@ public class ProductServiceImpl implements IProductService {
         }
         List<Product> productList = productMapper.selectListByDiggerId(diggerId);
 
+        List<ProductDetailVo> productDetailVoList = Lists.newArrayList();
+        for (Product productItem : productList){
+            ProductDetailVo productDetailVo = assembleProductDetailVo(productItem);
+            productDetailVoList.add(productDetailVo);
+        }
         PageInfo pageResult = new PageInfo(productList);
+        pageResult.setList(productDetailVoList);
 
         return ServerResponse.createBySuccess(pageResult);
     }
