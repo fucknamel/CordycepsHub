@@ -140,6 +140,8 @@ public class ProductServiceImpl implements IProductService {
         PageHelper.startPage(pageNum, pageSize);
         if (StringUtils.isNoneBlank(productTitle)){
             productTitle = new StringBuilder().append("%").append(productTitle).append("%").toString();
+        }else {
+            productTitle = null;
         }
         List<Product> productList = productMapper.selectListByTitleAndProductId(productTitle, productId);
 
