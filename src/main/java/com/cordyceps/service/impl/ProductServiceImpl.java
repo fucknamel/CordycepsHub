@@ -37,7 +37,7 @@ public class ProductServiceImpl implements IProductService {
     public ServerResponse saveOrUpdateProduct(Product product) {
         if (product != null) {
             if (product.getId() != null) {
-                int rowCount = productMapper.updateByPrimaryKey(product);
+                int rowCount = productMapper.updateByPrimaryKeySelective(product);
                 if (rowCount > 0) {
                     return ServerResponse.createBySuccessMessage("更新产品成功");
                 }
