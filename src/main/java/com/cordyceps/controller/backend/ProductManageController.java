@@ -39,7 +39,7 @@ public class ProductManageController {
 
     @RequestMapping(value = "save.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse productSave(HttpSession session, Product product){
+    public ServerResponse productSave(HttpSession session, Product product) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，请登录管理员");
@@ -47,14 +47,15 @@ public class ProductManageController {
         if (iUserService.checkAdminRole(user).isSuccess()) {
             ServerResponse serverResponse = iProductService.saveOrUpdateProduct(product);
 
-            int id = (int)serverResponse.getData();
+            int id = (int) serverResponse.getData();
             String detailUrl = PropertiesUtil.getProperty("detail.prefix") + id;
 
             String path = QRCodeUtil.getQRcodePath(detailUrl);
             String targetFileName = iFileService.uploadLocalFile(new File(path), path);
-            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileName;
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFileName;
 
             Map fileMap = Maps.newHashMap();
+            fileMap.put("productId", id);
             fileMap.put("uri", targetFileName);
             fileMap.put("url", url);
 
@@ -66,7 +67,7 @@ public class ProductManageController {
 
     @RequestMapping(value = "set_sale_status.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse setSaleStatus(HttpSession session, Integer productId, Integer status){
+    public ServerResponse setSaleStatus(HttpSession session, Integer productId, Integer status) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要登录管理员");
@@ -79,22 +80,22 @@ public class ProductManageController {
 
     @RequestMapping(value = "get_detail.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse getDetail(HttpSession session, Integer productId){
+    public ServerResponse getDetail(HttpSession session, Integer productId) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
-        if(user == null){
+        if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，请登录管理员");
         }
-        if(iUserService.checkAdminRole(user).isSuccess()){
+        if (iUserService.checkAdminRole(user).isSuccess()) {
             //填充业务
             return iProductService.getProductDetail(productId);
-        }else {
+        } else {
             return ServerResponse.createByErrorMessage("无权限操作");
         }
     }
 
     @RequestMapping(value = "get_list.do", method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,@RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+    public ServerResponse getList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要登录管理员");
@@ -107,7 +108,7 @@ public class ProductManageController {
 
     @RequestMapping(value = "search.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse productSearch(HttpSession session, String productTitle, Integer productId, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+    public ServerResponse productSearch(HttpSession session, String productTitle, Integer productId, @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要登录管理员");
@@ -120,7 +121,7 @@ public class ProductManageController {
 
     @RequestMapping(value = "upload.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse upload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpServletRequest request){
+    public ServerResponse upload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpServletRequest request) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要登录管理员");
@@ -128,7 +129,7 @@ public class ProductManageController {
         if (iUserService.checkAdminRole(user).isSuccess()) {
             String path = request.getSession().getServletContext().getRealPath("upload");
             String targetFileName = iFileService.upload(file, path);
-            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileName;
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFileName;
 
             Map fileMap = Maps.newHashMap();
             fileMap.put("uri", targetFileName);
