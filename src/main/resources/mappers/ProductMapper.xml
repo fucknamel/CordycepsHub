@@ -32,7 +32,7 @@
     delete from cordyceps_product
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.cordyceps.pojo.Product" >
+  <insert id="insert" parameterType="com.cordyceps.pojo.Product" keyProperty="id" useGeneratedKeys="true">
     insert into cordyceps_product (id, category_id, digger_id, 
       subtitle, main_image, sub_images, 
       length, weight, detail, 

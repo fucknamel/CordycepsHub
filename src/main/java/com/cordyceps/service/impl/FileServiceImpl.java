@@ -2,6 +2,7 @@ package com.cordyceps.service.impl;
 
 import com.cordyceps.service.IFileService;
 import com.cordyceps.util.FTPUtil;
+import com.cordyceps.util.QRCodeUtil;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class FileServiceImpl implements IFileService {
 
     private Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
-    public String upload(MultipartFile file, String path){
+    public String upload(MultipartFile file, String path) {
         String fileName = file.getOriginalFilename();
         String fileExtensionName = fileName.substring(fileName.lastIndexOf(".") + 1);
         String uploadFileName = UUID.randomUUID().toString() + "." + fileExtensionName;
@@ -39,10 +40,41 @@ public class FileServiceImpl implements IFileService {
             FTPUtil.uploadFile(Lists.newArrayList(targetFile));
 
             targetFile.delete();
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.error("文件上传异常", e);
         }
 
         return targetFile.getName();
+    }
+
+    public String uploadLocalFile(File file, String path) {
+        String fileName = file.getName();
+        String fileExtensionName = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String uploadFileName = UUID.randomUUID().toString() + "." + fileExtensionName;
+        logger.info("开始上传文件，上传文件的原文件名:{}，上传的路径:{}，新文件名:{}", fileName, path, uploadFileName);
+
+        //将原文件改名
+        String pathNew = path.substring(0, path.lastIndexOf("/") + 1) + uploadFileName;
+        file.renameTo(new File(pathNew));
+        file.delete();
+        File targetFile = new File((pathNew));
+
+        try {
+            //之后将文件上传到FTP服务器
+            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
+
+            targetFile.delete();
+        } catch (IOException e) {
+            logger.error("文件上传异常", e);
+        }
+
+        return targetFile.getName();
+    }
+
+    public static void main(String[] args) {
+        String path = QRCodeUtil.getQRcodePath("www.baidu.com");
+        File file = new File(path);
+        FileServiceImpl fileService = new FileServiceImpl();
+        System.out.println(fileService.uploadLocalFile(file, path));
     }
 }

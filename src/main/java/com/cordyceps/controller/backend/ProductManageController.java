@@ -9,6 +9,7 @@ import com.cordyceps.service.IFileService;
 import com.cordyceps.service.IProductService;
 import com.cordyceps.service.IUserService;
 import com.cordyceps.util.PropertiesUtil;
+import com.cordyceps.util.QRCodeUtil;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.Map;
 
 @Controller
@@ -43,7 +45,20 @@ public class ProductManageController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，请登录管理员");
         }
         if (iUserService.checkAdminRole(user).isSuccess()) {
-            return iProductService.saveOrUpdateProduct(product);
+            ServerResponse serverResponse = iProductService.saveOrUpdateProduct(product);
+
+            int id = (int)serverResponse.getData();
+            String detailUrl = PropertiesUtil.getProperty("detail.prefix") + id;
+
+            String path = QRCodeUtil.getQRcodePath(detailUrl);
+            String targetFileName = iFileService.uploadLocalFile(new File(path), path);
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileName;
+
+            Map fileMap = Maps.newHashMap();
+            fileMap.put("uri", targetFileName);
+            fileMap.put("url", url);
+
+            return ServerResponse.createBySuccess("新增产品成功", fileMap);
         } else {
             return ServerResponse.createByErrorMessage("无操作权限");
         }

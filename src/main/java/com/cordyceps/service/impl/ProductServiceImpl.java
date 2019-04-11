@@ -45,7 +45,7 @@ public class ProductServiceImpl implements IProductService {
             } else {
                 int rowCount = productMapper.insert(product);
                 if (rowCount > 0) {
-                    return ServerResponse.createBySuccessMessage("新增产品成功");
+                    return ServerResponse.createBySuccess("新增产品成功", product.getId());
                 }
                 return ServerResponse.createByErrorMessage("新增产品失败");
             }
